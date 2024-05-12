@@ -9,25 +9,14 @@ class Board:
     def __getitem__(self, key):
         return self.board[key]
 
-    def display(self):
-        print('    0   1   2   3   4   5   6   7')
-
-        print('  ---------------------------------')
-        for i in range(8):
-            print(i, end=' | ')
-            for j in range(8):
-                print(f'{self.board[i][j]}', end=' | ')
-            print()
-            print('  ---------------------------------')
-
     def flip(self, row, col):
         if self[row][col] == 'W':
             self[row][col] = 'B'
         else:
             self[row][col] = 'W'
 
-    def filp_inBeween(self):
-        #to be implemented
+    def flip_in_between(self):
+        # To be implemented
         pass
 
     def is_full(self):
