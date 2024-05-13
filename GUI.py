@@ -1,5 +1,4 @@
 import tkinter as tk
-from input import NameDialog
 
 class OthelloGUI:
 
@@ -26,6 +25,7 @@ class OthelloGUI:
             valid_moves = self.game.current_player.findValidMoves(self.game.board)
             if (row, col) in valid_moves:
                 self.game.board[row][col] = str(self.game.current_player.color)
+                self.game.current_player.flip(row,col,self.game.board)
                 self.game.switch_player()
                 self.update_board()
 
