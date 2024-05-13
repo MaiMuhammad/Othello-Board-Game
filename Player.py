@@ -1,6 +1,6 @@
 import copy
 class Player:
-    def _init_(self, color):
+    def __init__(self, color):
         self.color = color
         self.opposingColor = "B" if self.color == "W" else "W"
 
@@ -14,6 +14,63 @@ class Player:
 
         return valid_moves
 
+    # def flipDiagonal(self, x, y, board):
+    #     flipOpposingColor = []
+    #     if y + 1 < 8 and x + 1 < 8 and board[x + 1][y + 1] == self.opposingColor:
+    #         flipOpposingColor.append((x + 1, y + 1))
+    #         for x1, y1 in zip(range(x + 2, 8), range(y + 2, 8)):
+    #             if board[x1][y1] == self.opposingColor:
+    #                 flipOpposingColor.append((x1, y1))
+    #                 continue
+    #             if board[x1][y1] == " ":
+    #                 break
+    #             if board[x1][y1] == self.color:
+    #                 for (i, j) in flipOpposingColor:
+    #                     board[i][j] = self.color
+    #                 flipOpposingColor = []
+    #                 break
+    #     flipOpposingColor = []
+    #     if y - 1 > 0 and x - 1 > 0 and board[x - 1][y - 1] == self.color:
+    #         flipOpposingColor.append((x - 1, y - 1))
+    #         for x1, y1 in zip(range(x - 2, -1, -1), range(y - 2, -1, -1)):
+    #             if board[x1][y1] == self.opposingColor:
+    #                 flipOpposingColor.append(x1, y1)
+    #                 continue
+    #             if board[x1][y1] == " ":
+    #                 break
+    #             if board[x1][y1] == self.color:
+    #                 for (i, j) in flipOpposingColor:
+    #                     board[i][j] = self.color
+    #                 flipOpposingColor = []
+    #                 break
+    #     flipOpposingColor = []
+    #     if y - 1 > 0 and x + 1 < 8 and board[x + 1][y - 1] == self.opposingColor:
+    #         flipOpposingColor.append((x + 1, y - 1))
+    #         for x1, y1 in zip(range(x + 2, 8), range(y - 2, -1, -1)):
+    #             if board[x1][y1] == self.opposingColor:
+    #                 flipOpposingColor.append(x1, y1)
+    #                 continue
+    #             if board[x1][y1] == " ":
+    #                 break
+    #             if board[x1][y1] == self.color:
+    #                 for (i, j) in flipOpposingColor:
+    #                     board[i][j] = self.color
+    #                 flipOpposingColor = []
+    #                 break
+    #     flipOpposingColor = []
+    #     if y + 1 < 8 and x - 1 > 0 and board[x - 1][y + 1] == self.opposingColor:
+    #         flipOpposingColor.append((x - 1, y + 1))
+    #         for x1, y1 in zip(range(x - 2, -1, -1), range(y + 2, 8)):
+    #             if board[x1][y1] == self.opposingColor:
+    #                 flipOpposingColor.append(x1, y1)
+    #                 continue
+    #             if board[x1][y1] == " ":
+    #                 break
+    #             if board[x1][y1] == self.color:
+    #                 for (i, j) in flipOpposingColor:
+    #                     board[i][j] = self.color
+    #                 flipOpposingColor = []
+    #                 break
 
     def findValidMovesX(self, x, y, board):
         if x + 1 < 8 and board[x + 1][y] == self.opposingColor:
