@@ -279,3 +279,8 @@ class Player:
     def count_score(self, board):
         score = sum(row.count(str(self.color)) for row in board)
         return score
+
+    def score(self, board):
+        num_black = sum(row.count('B') for row in board)
+        num_white = sum(row.count('W') for row in board)
+        return {'B': num_black, 'W': num_white}

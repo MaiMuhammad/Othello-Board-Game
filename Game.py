@@ -59,8 +59,9 @@ class Game:
 
         # Display the final board and result
         self.board.update_board(self.current_player)
-        score = self.board.count_score()
+        score = self.current_player.score(self.board.colors)
         if score['B'] == score['W']:
             print('Game over!\nDraw!')
         else:
-            print(f"Game over! {'Black' if score['B'] > score['W'] else 'White'} wins!")
+            winner = 'Player' if score['B'] > score['W'] else 'Computer'
+            print(f"Game over! {winner} wins!")
