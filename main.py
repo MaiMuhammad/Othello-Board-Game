@@ -7,7 +7,21 @@ from GUI import OthelloGUI
 from Computer import Computer
 from Difficulty import DifficultyLevelWindow
 
+if __name__ == "__main__":
+    board = Board()
+    player1 = Player('B')
+    player2 = Computer('W')
 
+    game = Game(board, player1, player2)
+
+    print("Welcome to the game!\n")
+    print("Player 1 please enter your name:")
+    player1.name = input()
+    print(f"Player 1's name: {player1.name}\nPlayer 1's color: {player1.color}")
+
+    game.play()
+
+"""
 if __name__ == "__main__":
     def on_difficulty_selected(difficulty):
         print(difficulty)
@@ -24,3 +38,5 @@ if __name__ == "__main__":
     game = Game(board, Player1, Player2)
     gui = OthelloGUI(root, game)
     root.mainloop()
+
+"""

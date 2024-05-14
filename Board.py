@@ -26,10 +26,30 @@ class Board:
 
         return True
 
-    def display_board(self):
-        print("  0 1 2 3 4 5 6 7")
+    def display(self):
+        print('    0   1   2   3   4   5   6   7')
+
+        print('  ---------------------------------')
         for i in range(8):
-            print(i, end=' ')
+            print(i, end=' | ')
             for j in range(8):
-                print(f"{self.colors[i][j]}", end=' ')
+                print(f'{self.colors[i][j]}', end=' | ')
             print()
+            print('  ---------------------------------')
+
+    def update_board(self, current_player):
+        print('\n    0   1   2   3   4   5   6   7')
+        print('  ---------------------------------')
+        for i in range(8):
+            print(i, end=' | ')
+            for j in range(8):
+                if self.board[i][j] == ' ':
+                    valid_moves = current_player.findValidMoves(self.colors)
+                    if (i, j) in valid_moves:
+                        print('●', end=' | ')  # Use ● for valid moves
+                    else:
+                        print(self.colors[i][j], end=' | ')
+                else:
+                    print(self.colors[i][j], end=' | ')
+            print()
+            print('  ---------------------------------')
