@@ -7,7 +7,8 @@ class Computer(Player):
 
     def make_move(self, board):
         # Call Alpha-Beta Pruning to determine the best move
-        best_move = self.alpha_beta_pruning(board, 4, float('-inf'), float('inf'), True)[1]  # Adjust depth as needed
+        self.dificulltyLevel = self.choose_difficulty_level(self)
+        best_move = self.alpha_beta_pruning(board, self.dificulltyLevel, float('-inf'), float('inf'), True)[1]  # Adjust depth as needed
         return best_move
 
     def alpha_beta_pruning(self, board, depth, alpha, beta, maximizingPlayer):
@@ -57,6 +58,19 @@ class Computer(Player):
     def make_move_on_board(self, board, move, color):
         # Implement logic to make a move on the board
         pass
-
     
-
+    def choose_difficulty_level(self):
+        print("Choose difficulty level:")
+        print("1. Easy")
+        print("2. Medium")
+        print("3. Hard")
+        choice = input("Enter your choice (1-3): ")
+        if choice == '1':
+            self.dificulltyLevel = "easy"
+        elif choice == '2':
+            self.dificulltyLevel =  "medium"
+        elif choice == '3':
+            self.dificulltyLevel = "hard"
+        else:
+            print("Invalid choice. Defaulting to medium.")
+            self.dificulltyLevel =  "medium"
