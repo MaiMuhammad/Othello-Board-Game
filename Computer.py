@@ -3,6 +3,7 @@ from Player import Player
 class Computer(Player):
     
     def __init__(self, color):
+        self.color = 'W'
         super().__init__(color)
 
     def make_move(self, board):
