@@ -8,7 +8,7 @@ class Computer(Player):
         self.difficulty_level = 3  # Default difficulty level
 
     def make_move(self, board):
-        self.choose_difficulty_level()
+        self.difficulty_level = self.choose_difficulty_level()
         # Call Alpha-Beta Pruning to determine the best move
         best_move = self.alpha_beta_pruning(board, self.difficulty_level, float('-inf'), float('inf'), True)[1]
         return best_move
@@ -57,12 +57,6 @@ class Computer(Player):
 
     def is_game_over(self, board):
         return len(self.get_valid_moves(board, 'B')) == 0 and len(self.get_valid_moves(board, 'W')) == 0
-
-    # def get_valid_moves(self, board, color):
-    #     pass
-
-    # def make_move_on_board(self, board, move, color):
-    #     pass
         
     
     def choose_difficulty_level(self):
@@ -72,11 +66,11 @@ class Computer(Player):
         print("3. Hard")
         choice = input("Enter your choice (1-3): ")
         if choice == '1':
-            self.dificulltyLevel = 1
+            self.dificullty_level = 1
         elif choice == '2':
-            self.dificulltyLevel =  3
+            self.dificullty_level =  3
         elif choice == '3':
-            self.dificulltyLevel = 5
+            self.dificullty_level = 5
         else:
             print("Invalid choice. Defaulting to medium.")
-            self.dificulltyLevel = 3
+            self.dificullty_level = 3
