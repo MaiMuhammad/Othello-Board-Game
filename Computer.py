@@ -52,12 +52,11 @@ class Computer(Player):
         return len(self.get_valid_moves(board, 'B')) == 0 and len(self.get_valid_moves(board, 'W')) == 0
 
     def get_valid_moves(self, board, color):
-        # Implement logic to get valid moves for a given color
-        pass
+        self.findValidMoves
 
     def make_move_on_board(self, board, move, color):
-        # Implement logic to make a move on the board
-        pass
+        self.make_move
+        
     
     def choose_difficulty_level(self):
         print("Choose difficulty level:")
