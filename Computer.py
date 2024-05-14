@@ -72,4 +72,4 @@ class Computer(Player):
             self.dificulltyLevel = 3
         else:
             print("Invalid choice. Defaulting to medium.")
-            self.dificulltyLevel =  "medium"
+            self.dificulltyLevel = 1
