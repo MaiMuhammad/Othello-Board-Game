@@ -65,11 +65,11 @@ class Computer(Player):
         print("3. Hard")
         choice = input("Enter your choice (1-3): ")
         if choice == '1':
-            self.dificulltyLevel = "easy"
+            self.dificulltyLevel = 0
         elif choice == '2':
-            self.dificulltyLevel =  "medium"
+            self.dificulltyLevel =  1
         elif choice == '3':
-            self.dificulltyLevel = "hard"
+            self.dificulltyLevel = 3
         else:
             print("Invalid choice. Defaulting to medium.")
             self.dificulltyLevel =  "medium"
