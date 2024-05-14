@@ -25,3 +25,11 @@ class Board:
                     return False
 
         return True
+
+    def display_board(self):
+        print("  0 1 2 3 4 5 6 7")
+        for i in range(8):
+            print(i, end=' ')
+            for j in range(8):
+                print(f"{self.colors[i][j]}", end=' ')
+            print()
