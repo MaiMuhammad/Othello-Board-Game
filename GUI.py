@@ -89,11 +89,13 @@ class OthelloGUI:
                         cell = self.cells[i][j]
                         cell.config(bg='sea green')
 
-                self.game.switch_player()
-                self.master.after(1000, self.computer_move)
             else:
                 tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
-                self.computer_move()
+                if self.game.game_over():
+                    self.show_message()
+
+        self.game.switch_player()
+        self.master.after(1000, self.computer_move)
 
     def update_board(self):
         if not isinstance(self.game.current_player, Computer):
@@ -101,9 +103,9 @@ class OthelloGUI:
                 for j in range(8):
                     cell = self.cells[i][j]
                     valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
-                    if len(valid_moves)==0:
-                        tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
-                    elif self.game.board.colors[i][j] == ' ':
+                    # if len(valid_moves)==0:
+                    #     tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                    if self.game.board.colors[i][j] == ' ':
                         if (i, j) in valid_moves:
                             cell.config(bg='dark sea green')
                             cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
@@ -129,8 +131,8 @@ class OthelloGUI:
                 row, col = move
                 self.game.board.colors[row][col] = self.game.current_player.color
                 self.game.current_player.flip(row, col, self.game.board)
-            else:
-                tk.messagebox.showinfo("oops","No valid moves for computer\nYou're turn!")
+            # else:
+            #     tk.messagebox.showinfo("oops", "No valid moves for computer\nYou're turn!")
             self.game.switch_player()
             self.update_board()
 
@@ -150,24 +152,28 @@ class OthelloGUI:
         canvas.create_oval(4, 4, cell_size - 4, cell_size - 4, outline='black', width=1, fill=circle_color)
 
     def show_message(self):
-        if self.game.game_over():
-            if self.game.player2.count_score(self.game.board.colors) == self.game.player1.count_score(
-                    self.game.board.colors):
-                message = 'Game over!\nDraw!'
+        import sys
+
+        def show_message(self):
+            if self.game.game_over():
+                if self.game.player2.count_score(self.game.board.colors) == self.game.player1.count_score(
+                        self.game.board.colors):
+                    message = 'Game over!\nDraw!'
+                else:
+                    message = f"Game over! {'Black' if self.game.player1.count_score(self.game.board.colors) > self.game.player2.count_score(self.game.board.colors) else 'White'} wins!"
             else:
-                message = f"Game over! {'Black' if self.game.player1.count_score(self.game.board.colors) > self.game.player2.count_score(self.game.board.colors) else 'White'} wins!"
-        else:
-            message = 'Game is still in progress'
+                message = 'Game is still in progress'
 
-        popup = tk.Toplevel(self.master)
-        popup.attributes('-topmost', True)
-        popup.attributes('-topmost', False)
-        popup.title("Message")
-        label = tk.Label(popup, text=message, font=("Helvetica", 12), padx=20, pady=10, width=20)
-        label.pack()
+            popup = tk.Toplevel(self.master)
+            popup.attributes('-topmost', True)
+            popup.attributes('-topmost', False)
+            popup.title("Message")
+            label = tk.Label(popup, text=message, font=("Helvetica", 12), padx=20, pady=10, width=20)
+            label.pack()
 
-        ok_button = tk.Button(popup, text="OK", command=popup.destroy, width=6, height=1)
-        ok_button.pack(pady=8)
+            ok_button = tk.Button(popup, text="OK", command=lambda: [popup.destroy(), sys.exit()], width=6, height=1)
+            ok_button.pack(pady=8)
 
-        self.master.wait_window(popup)
+            self.master.wait_window(popup)
+
 

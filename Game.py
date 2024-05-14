@@ -14,13 +14,13 @@ class Game:
         self.current_player = self.player1 if self.current_player == self.player2 else self.player2
 
     def game_over(self):
-        game_over = False
-        if self.board.is_full():
-            game_over = True
-        elif not self.player1.has_valid_move(self.board) and not self.player1.has_valid_move(self.board):
-            game_over = True
 
-        return game_over
+        if self.board.is_full():
+            return True
+        elif not self.player1.has_valid_move(self.board) and not self.player1.has_valid_move(self.board):
+            return True
+
+        return False
 
     def play(self):
         # Choose difficulty level for the computer player
