@@ -1,14 +1,18 @@
 import tkinter as tk
+import tkinter.messagebox
+
 from Computer import Computer
+import time
 
 
 class OthelloGUI:
 
-    def __init__(self, master, game):
+    def __init__(self, master, game,difficulty):
         self.master = master
         self.master.title("Othello")
         self.game = game
         self.create_board()
+        self.difficulty = difficulty
 
     def create_board(self):
         self.master.configure(bg='gray14')
@@ -25,9 +29,9 @@ class OthelloGUI:
 
         # Left-aligned label for player 1's score
         self.player1_score = tk.StringVar()
-        player1_label = tk.Label(player1_frame, text='Player 1\n', font=('Arial', 14, 'bold'), fg='sea green',
+        player1_label = tk.Label(player1_frame, text='Player\n', font=('Arial', 14, 'bold'), fg='sea green',
                                  bg='gray22')
-        player1_label.pack(side=tk.TOP, anchor=tk.W)
+        player1_label.pack(side=tk.TOP, anchor=tk.CENTER)
 
         player1_score_label = tk.Label(player1_frame, textvariable=self.player1_score, font=('Arial', 12,), padx=10,
                                        fg='white', bg='gray22')
@@ -39,7 +43,7 @@ class OthelloGUI:
 
         # Right-aligned label for player 2's score
         self.player2_score = tk.StringVar()
-        player2_label = tk.Label(player2_frame, text='Player 2\n', font=('Arial', 14, 'bold'), padx=30, fg='sea green',
+        player2_label = tk.Label(player2_frame, text='Computer\n', font=('Arial', 14, 'bold'), padx=30, fg='sea green',
                                  bg='gray22')
         player2_label.pack(side=tk.TOP, anchor=tk.E)
 
@@ -79,28 +83,38 @@ class OthelloGUI:
                 self.game.board.colors[row][col] = str(self.game.current_player.color)
                 self.draw_filled_circle(self.game.current_player.color, row, col)
                 self.game.current_player.flip(row, col, self.game.board.colors)
-                self.game.switch_player()
                 self.update_board()
+                for i in range(8):
+                    for j in range(8):
+                        cell = self.cells[i][j]
+                        cell.config(bg='sea green')
 
+                self.game.switch_player()
+                self.master.after(1000, self.computer_move)
+            else:
+                tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                self.computer_move()
 
     def update_board(self):
-        if isinstance(self.game.current_player, Computer):
+        if not isinstance(self.game.current_player, Computer):
             for i in range(8):
                 for j in range(8):
                     cell = self.cells[i][j]
                     valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
-                    if self.game.board.colors[i][j] == ' ':
+                    if len(valid_moves)==0:
+                        tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                    elif self.game.board.colors[i][j] == ' ':
                         if (i, j) in valid_moves:
                             cell.config(bg='dark sea green')
                             cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
                         else:
                             cell.config(bg='sea green')
-                        cell.delete("circle")
+
                     else:
                         cell.config(bg='sea green')
                         self.draw_filled_circle(self.game.board.colors[i][j], i, j)
-        else:
-            self.computer_move()
+
+
         # Update the scores initially
         self.update_scores()
 
@@ -110,14 +124,17 @@ class OthelloGUI:
 
     def computer_move(self):
         if isinstance(self.game.current_player, Computer):
-            self.game.current_player.make_move(self.game.board.colors)
-            self.game.board.display_board()
-            for i in range(8):
-                for j in range(8):
-                    cell = self.cells[i][j]
-                    cell.config(bg='sea green')
-                    self.draw_filled_circle(self.game.board.colors[i][j], i, j)
+            move = self.game.current_player.make_move(self.game.board.colors, self.difficulty)
+            if move is not None:
+                row, col = move
+                self.game.board.colors[row][col] = self.game.current_player.color
+                self.game.current_player.flip(row, col, self.game.board)
+            else:
+                tk.messagebox.showinfo("oops","No valid moves for computer\nYou're turn!")
             self.game.switch_player()
+            self.update_board()
+
+
         else:
             # Handle human player move here
             pass
@@ -153,3 +170,4 @@ class OthelloGUI:
         ok_button.pack(pady=8)
 
         self.master.wait_window(popup)
+

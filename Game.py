@@ -1,3 +1,6 @@
+from Computer import Computer
+import tkinter as tk
+import tkinter.messagebox
 class Game:
 
 
@@ -13,12 +16,10 @@ class Game:
     def game_over(self):
         game_over = False
         if self.board.is_full():
-            # or (not self.player1.has_valid_move(self.board) and not self.player2.has_valid_move(self.board)):
             game_over = True
-        elif not self.current_player.has_valid_move(self.board):
-            self.switch_player()
-        if not self.current_player.has_valid_move(self.board):
+        elif not self.player1.has_valid_move(self.board) and not self.player1.has_valid_move(self.board):
             game_over = True
+
         return game_over
 
     def play(self):

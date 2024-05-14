@@ -1,11 +1,11 @@
 import tkinter as tk
-
+from Computer import Computer
 class DifficultyLevelWindow(tk.Tk):
-    def __init__(self, set_difficulty_level_callback):
+    def __init__(self):
         super().__init__()
         self.title("Choose Difficulty Level")
         self.configure(bg='sea green')
-        self.set_difficulty_level_callback = set_difficulty_level_callback
+        #self.set_difficulty_level_callback = set_difficulty_level_callback
         self.difficulty = None
         self.create_window()
 
@@ -36,12 +36,13 @@ class DifficultyLevelWindow(tk.Tk):
 
     def set_difficulty_level(self, level):
         self.difficulty = level
-        self.set_difficulty_level_callback(self.difficulty)
         self.destroy()
 
 if __name__ == "__main__":
     def on_difficulty_selected(difficulty):
         return difficulty
 
-    difficulty_window = DifficultyLevelWindow(on_difficulty_selected)
+    difficulty_window = DifficultyLevelWindow()
+
     difficulty_window.mainloop()
+    print(difficulty_window.difficulty)

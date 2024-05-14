@@ -13,30 +13,28 @@ if __name__ == "__main__":
     player2 = Computer('W')
 
     game = Game(board, player1, player2)
+    #
+    # print("Welcome to the game!\n")
+    # print("Player 1 please enter your name:")
+    # player1.name = input()
+    # print(f"Player 1's name: {player1.name}\nPlayer 1's color: {player1.color}")
 
-    print("Welcome to the game!\n")
-    print("Player 1 please enter your name:")
-    player1.name = input()
-    print(f"Player 1's name: {player1.name}\nPlayer 1's color: {player1.color}")
+    # game.play()
 
-    game.play()
 
-"""
 if __name__ == "__main__":
-    def on_difficulty_selected(difficulty):
-        print(difficulty)
-        return difficulty
 
-    difficulty_window = DifficultyLevelWindow(on_difficulty_selected)
+    difficulty_window = DifficultyLevelWindow()
     difficulty_window.mainloop()
     Player1 = Player('B')
     # Player2 = Player('W')
     Player2 = Computer('W')
-    print(str(Player2.difficulty_level))
+
     root = tk.Tk()
     board = Board()
     game = Game(board, Player1, Player2)
-    gui = OthelloGUI(root, game)
+    gui = OthelloGUI(root, game,difficulty_window.difficulty)
+    print(gui.difficulty)
     root.mainloop()
 
-"""
+
