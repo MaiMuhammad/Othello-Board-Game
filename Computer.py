@@ -3,12 +3,12 @@ from Player import Player
 
 class Computer(Player):
     
-    def __init__(self, color,difficulty):
+    def __init__(self, color):
         super().__init__(color)
-        self.difficulty_level = difficulty  # Default difficulty level
+        self.difficulty_level = 3  # Default difficulty level
 
     def make_move(self, board):
-        # self.difficulty_level = self.choose_difficulty_level()
+        self.difficulty_level = self.choose_difficulty_level()
         # Call Alpha-Beta Pruning to determine the best move
         best_move = self.alpha_beta_pruning(board, self.difficulty_level, float('-inf'), float('inf'), True)[1]
         return best_move

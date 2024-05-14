@@ -80,7 +80,8 @@ class OthelloGUI:
                 self.draw_filled_circle(self.game.current_player.color, row, col)
                 self.game.current_player.flip(row, col, self.game.board.colors)
                 self.game.switch_player()
-                 # Update the board after each move
+                self.update_board()
+
 
     def update_board(self):
         if isinstance(self.game.current_player, Computer):
@@ -100,7 +101,6 @@ class OthelloGUI:
                         self.draw_filled_circle(self.game.board.colors[i][j], i, j)
         else:
             self.computer_move()
-
         # Update the scores initially
         self.update_scores()
 
@@ -109,15 +109,18 @@ class OthelloGUI:
             self.show_message()
 
     def computer_move(self):
-        self.game.current_player.make_move(self.game.board.colors)
-        for i in range(8):
-            for j in range(8):
-                cell = self.cells[i][j]
-                # valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
-                cell.config(bg='sea green')
-                self.draw_filled_circle(self.game.board.colors[i][j], i, j)
-                self.game.switch_player()
-
+        if isinstance(self.game.current_player, Computer):
+            self.game.current_player.make_move(self.game.board.colors)
+            self.game.board.display_board()
+            for i in range(8):
+                for j in range(8):
+                    cell = self.cells[i][j]
+                    cell.config(bg='sea green')
+                    self.draw_filled_circle(self.game.board.colors[i][j], i, j)
+            self.game.switch_player()
+        else:
+            # Handle human player move here
+            pass
 
     def draw_filled_circle(self, color, x, y):
         if color == "W":

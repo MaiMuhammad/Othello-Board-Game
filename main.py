@@ -17,7 +17,7 @@ if __name__ == "__main__":
     difficulty_window.mainloop()
     Player1 = Player('B')
     # Player2 = Player('W')
-    Player2 = Computer('W', on_difficulty_selected)
+    Player2 = Computer('W')
     print(str(Player2.difficulty_level))
     root = tk.Tk()
     board = Board()
