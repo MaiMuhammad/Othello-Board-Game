@@ -1,24 +1,26 @@
+import copy
 from Player import Player
 
 class Computer(Player):
     
     def __init__(self, color):
         super().__init__(color)
+        self.difficulty_level = 3  # Default difficulty level
 
     def make_move(self, board):
+        self.choose_difficulty_level()
         # Call Alpha-Beta Pruning to determine the best move
-        self.dificulltyLevel = self.choose_difficulty_level(self)
-        best_move = self.alpha_beta_pruning(board, self.dificulltyLevel, float('-inf'), float('inf'), True)[1]  # Adjust depth as needed
+        best_move = self.alpha_beta_pruning(board, self.difficulty_level, float('-inf'), float('inf'), True)[1]
         return best_move
 
     def alpha_beta_pruning(self, board, depth, alpha, beta, maximizingPlayer):
-        if depth == 0 or self.is_game_over(board):
+        if depth == 0 or not self.has_valid_move(board):
             return self.Utility(board), None
-        
+
         if maximizingPlayer:
             max_eval = float('-inf')
             best_move = None
-            for move in self.get_valid_moves(board, self.color):
+            for move in self.findValidMoves(board):
                 new_board = self.make_move_on_board(board, move, self.color)
                 eval, _ = self.alpha_beta_pruning(new_board, depth - 1, alpha, beta, False)
                 if eval > max_eval:
@@ -31,9 +33,8 @@ class Computer(Player):
         else:
             min_eval = float('inf')
             best_move = None
-            opponent_color = 'B' if self.color == 'W' else 'W'
-            for move in self.get_valid_moves(board, opponent_color):
-                new_board = self.make_move_on_board(board, move, opponent_color)
+            for move in self.findValidMoves(board):
+                new_board = self.make_move_on_board(board, move, self.opposingColor)
                 eval, _ = self.alpha_beta_pruning(new_board, depth - 1, alpha, beta, True)
                 if eval < min_eval:
                     min_eval = eval
@@ -43,6 +44,12 @@ class Computer(Player):
                     break  # Alpha cutoff
             return min_eval, best_move
 
+    def make_move_on_board(self, board, move, color):
+        new_board = copy.deepcopy(board)
+        new_board[move[0]][move[1]] = color
+        self.flip(move[0], move[1], new_board)
+        return new_board
+
     def Utility(self, board):
         num_black = sum(row.count('B') for row in board)
         num_white = sum(row.count('W') for row in board)
@@ -51,11 +58,11 @@ class Computer(Player):
     def is_game_over(self, board):
         return len(self.get_valid_moves(board, 'B')) == 0 and len(self.get_valid_moves(board, 'W')) == 0
 
-    def get_valid_moves(self, board, color):
-        self.findValidMoves
+    # def get_valid_moves(self, board, color):
+    #     pass
 
-    def make_move_on_board(self, board, move, color):
-        self.make_move
+    # def make_move_on_board(self, board, move, color):
+    #     pass
         
     
     def choose_difficulty_level(self):
@@ -65,11 +72,11 @@ class Computer(Player):
         print("3. Hard")
         choice = input("Enter your choice (1-3): ")
         if choice == '1':
-            self.dificulltyLevel = 0
+            self.dificulltyLevel = 1
         elif choice == '2':
-            self.dificulltyLevel =  1
+            self.dificulltyLevel =  3
         elif choice == '3':
-            self.dificulltyLevel = 3
+            self.dificulltyLevel = 5
         else:
             print("Invalid choice. Defaulting to medium.")
-            self.dificulltyLevel = 1
+            self.dificulltyLevel = 3
