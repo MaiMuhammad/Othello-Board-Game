@@ -1,4 +1,6 @@
 import tkinter as tk
+from Computer import Computer
+
 
 class OthelloGUI:
 
@@ -17,29 +19,32 @@ class OthelloGUI:
         score_frame = tk.Frame(self.master, bg='gray22')
         score_frame.grid(row=0, column=0, columnspan=100, sticky="ew", padx=80, pady=20)
 
-
         # Frame for player 1's score
-        player1_frame = tk.Frame(score_frame,bg='gray22')
-        player1_frame.pack(side=tk.LEFT, anchor=tk.W,pady=30,padx=30)  # Adjust padx here
+        player1_frame = tk.Frame(score_frame, bg='gray22')
+        player1_frame.pack(side=tk.LEFT, anchor=tk.W, pady=30, padx=30)  # Adjust padx here
 
         # Left-aligned label for player 1's score
         self.player1_score = tk.StringVar()
-        player1_label = tk.Label(player1_frame, text='Player 1\n', font=('Arial', 14, 'bold'), fg='sea green',bg='gray22')
+        player1_label = tk.Label(player1_frame, text='Player 1\n', font=('Arial', 14, 'bold'), fg='sea green',
+                                 bg='gray22')
         player1_label.pack(side=tk.TOP, anchor=tk.W)
 
-        player1_score_label = tk.Label(player1_frame, textvariable=self.player1_score, font=('Arial', 12,), padx=10,fg='white',bg='gray22')
-        player1_score_label.pack(side=tk.TOP,anchor=tk.W)
+        player1_score_label = tk.Label(player1_frame, textvariable=self.player1_score, font=('Arial', 12,), padx=10,
+                                       fg='white', bg='gray22')
+        player1_score_label.pack(side=tk.TOP, anchor=tk.W)
 
         # Frame for player 2's score
-        player2_frame = tk.Frame(score_frame,bg='gray22')
+        player2_frame = tk.Frame(score_frame, bg='gray22')
         player2_frame.pack(side=tk.RIGHT, anchor=tk.E, padx=(5, 0))
 
         # Right-aligned label for player 2's score
         self.player2_score = tk.StringVar()
-        player2_label = tk.Label(player2_frame, text='Player 2\n', font=('Arial', 14, 'bold'),padx=30, fg='sea green',bg='gray22')
+        player2_label = tk.Label(player2_frame, text='Player 2\n', font=('Arial', 14, 'bold'), padx=30, fg='sea green',
+                                 bg='gray22')
         player2_label.pack(side=tk.TOP, anchor=tk.E)
 
-        player2_score_label = tk.Label(player2_frame, textvariable=self.player2_score, font=('Arial', 12), padx=30,anchor='center',fg='white',bg='gray22')
+        player2_score_label = tk.Label(player2_frame, textvariable=self.player2_score, font=('Arial', 12), padx=30,
+                                       anchor='center', fg='white', bg='gray22')
         player2_score_label.pack(side=tk.TOP)
 
         for i in range(8):
@@ -61,8 +66,10 @@ class OthelloGUI:
         self.update_scores()
 
     def update_scores(self):
-        self.player1_score.set(f"Color: {self.game.player1.color}\nScore: {self.game.player1.count_score(self.game.board.colors)}")
-        self.player2_score.set(f"Color: {self.game.player2.color}\nScore: {self.game.player2.count_score(self.game.board.colors)}")
+        self.player1_score.set(
+            f"Color: {self.game.player1.color}\nScore: {self.game.player1.count_score(self.game.board.colors)}")
+        self.player2_score.set(
+            f"Color: {self.game.player2.color}\nScore: {self.game.player2.count_score(self.game.board.colors)}")
 
     def handle_click(self, row, col):
         if self.game.board.colors[row][col] == ' ':
@@ -73,25 +80,26 @@ class OthelloGUI:
                 self.draw_filled_circle(self.game.current_player.color, row, col)
                 self.game.current_player.flip(row, col, self.game.board.colors)
                 self.game.switch_player()
-                self.update_board()  # Update the board after each move
+                 # Update the board after each move
 
     def update_board(self):
-
-        for i in range(8):
-            for j in range(8):
-                cell = self.cells[i][j]
-                valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
-                if self.game.board.colors[i][j] == ' ':
-                    if (i, j) in valid_moves:
-                        cell.config(bg='dark sea green')
-                        cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
+        if isinstance(self.game.current_player, Computer):
+            for i in range(8):
+                for j in range(8):
+                    cell = self.cells[i][j]
+                    valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
+                    if self.game.board.colors[i][j] == ' ':
+                        if (i, j) in valid_moves:
+                            cell.config(bg='dark sea green')
+                            cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
+                        else:
+                            cell.config(bg='sea green')
+                        cell.delete("circle")
                     else:
                         cell.config(bg='sea green')
-                    cell.delete("circle")
-                else:
-                    cell.config(bg='sea green')
-
-                    self.draw_filled_circle(self.game.board.colors[i][j], i, j)
+                        self.draw_filled_circle(self.game.board.colors[i][j], i, j)
+        else:
+            self.computer_move()
 
         # Update the scores initially
         self.update_scores()
@@ -99,6 +107,17 @@ class OthelloGUI:
         # After updating the board, check if the game is over
         if self.game.game_over():
             self.show_message()
+
+    def computer_move(self):
+        self.game.current_player.make_move(self.game.board.colors)
+        for i in range(8):
+            for j in range(8):
+                cell = self.cells[i][j]
+                # valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
+                cell.config(bg='sea green')
+                self.draw_filled_circle(self.game.board.colors[i][j], i, j)
+                self.game.switch_player()
+
 
     def draw_filled_circle(self, color, x, y):
         if color == "W":
@@ -109,7 +128,6 @@ class OthelloGUI:
         circle_radius = cell_size // 2
         canvas = self.cells[x][y]
         canvas.create_oval(4, 4, cell_size - 4, cell_size - 4, outline='black', width=1, fill=circle_color)
-
 
     def show_message(self):
         if self.game.game_over():

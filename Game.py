@@ -15,4 +15,8 @@ class Game:
         if self.board.is_full():
             # or (not self.player1.has_valid_move(self.board) and not self.player2.has_valid_move(self.board)):
             game_over = True
+        elif not self.current_player.has_valid_move(self.board):
+            self.switch_player()
+        if not self.current_player.has_valid_move(self.board):
+            game_over = True
         return game_over
