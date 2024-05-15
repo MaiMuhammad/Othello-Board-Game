@@ -11,6 +11,16 @@ class DifficultyLevelWindow(tk.Tk):
 
     # function that create the window allowing the player to choose difficulty
     def create_window(self):
+        # Get screen width and height
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        # Calculate x and y coordinates for the window to be centered
+        x = (screen_width - 300) // 2
+        y = (screen_height - 150) // 2
+
+        # Set the window position and size
+        self.geometry("300x150+{}+{}".format(x, y))
 
         # title
         label = tk.Label(self, text="Select Difficulty", font=("Arial", 16), bg='sea green', fg='white')
@@ -40,7 +50,7 @@ class DifficultyLevelWindow(tk.Tk):
         # Set window size
         self.geometry("300x150")
 
-    # difficulty is set and the popup is closed
+
     def set_difficulty_level(self, level):
         self.difficulty = level
         self.destroy()

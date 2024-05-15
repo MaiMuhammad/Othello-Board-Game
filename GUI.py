@@ -20,6 +20,23 @@ class OthelloGUI:
         valid_moves = self.game.current_player.findValidMoves(
             self.game.board.colors)  # Find valid moves for the current player
 
+        # Get the screen width and height
+        screen_width = self.master.winfo_screenwidth()
+        screen_height = self.master.winfo_screenheight()
+
+        # Calculate the position of the window to center it
+        window_width = 600  # Adjust as needed
+        window_height = 600  # Adjust as needed
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        self.master.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+        # Configure the main window
+        self.master.configure(bg='gray14')
+        self.cells = [[None for _ in range(8)] for _ in range(8)]  # Initialize the cells on the game board
+        valid_moves = self.game.current_player.findValidMoves(
+            self.game.board.colors)  # Find valid moves for the current player
+
         # Create a frame to hold the score labels
         score_frame = tk.Frame(self.master, bg='gray22')
         score_frame.grid(row=0, column=0, columnspan=100, sticky="ns", padx=373, pady=(10,10))
@@ -118,30 +135,48 @@ class OthelloGUI:
                 self.master.after(1000, self.computer_move)
 
     def update_board(self):
+        # Update the game board GUI after each move
+
+        # checks that the player is not computer
         if not isinstance(self.game.current_player, Computer):
             for i in range(8):
                 for j in range(8):
                     cell = self.cells[i][j]
+                    # gets valid moves and if there are no valid moves, and the game is not over then a message is
+                    # printed and the players switch and computer makes a move
                     valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
+                    print(valid_moves)
+                    if not self.game.current_player.has_valid_move(self.game.board):
+                        if self.game.game_over():
+                            print("game over")
+                            self.show_message()
+                            break
+                        tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                        self.game.switch_player()
+                        self.computer_move()
+
+
+
+                    # if the cell is empty and the cell is within valid moves then the cell color changes indicating it
+                    # is a valid move choice else the cell color stays the same
                     if self.game.board.colors[i][j] == ' ':
                         if (i, j) in valid_moves:
                             cell.config(bg='dark sea green')
                             cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
                         else:
                             cell.config(bg='sea green')
+
                     else:
                         cell.config(bg='sea green')
                         self.draw_filled_circle(self.game.board.colors[i][j], i, j)
 
+        # Update the scores
         self.update_scores()
 
+        # After updating the board, check if the game is over
         if self.game.game_over():
+            print("game over")
             self.show_message()
-        elif not self.game.current_player.has_valid_move(self.game.board):
-            tk.messagebox.showinfo("Oops", "No valid moves for you\nComputer's turn!")
-            self.game.switch_player()
-            self.computer_move()
-            
 
     def computer_move(self):
         # Perform the computer's move
@@ -195,12 +230,23 @@ class OthelloGUI:
                 self.game.board.colors):
             message = 'Game over!\nDraw!'
         else:
-            message = f"Game over! {'Black' if self.game.player1.count_score(self.game.board.colors) > self.game.player2.count_score(self.game.board.colors) else 'White'} wins!"
+            message = f"Game over! \n\n{'Computer Wins' if self.game.player2.count_score(self.game.board.colors) > self.game.player1.count_score(self.game.board.colors) else 'You win!'} "
 
         popup = tk.Toplevel(self.master)
         popup.title("Message")
         label = tk.Label(popup, text=message, font=("Helvetica", 12), padx=20, pady=10, width=20)
         label.pack()
+
+        # Get the screen width and height
+        screen_width = self.master.winfo_screenwidth()
+        screen_height = self.master.winfo_screenheight()
+
+        # Calculate the position of the popup to center it
+        popup_width = 220  # Adjust as needed
+        popup_height = 150  # Adjust as needed
+        x = (screen_width - popup_width) // 2
+        y = (screen_height - popup_height) // 2
+        popup.geometry(f"{popup_width}x{popup_height}+{x}+{y}")
 
         # closes popup , the game window and stops the system when button is clicked
         def close_windows():
@@ -212,4 +258,5 @@ class OthelloGUI:
         ok_button.pack(pady=8)
 
         self.master.wait_window(popup)
+
 
