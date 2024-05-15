@@ -1,8 +1,4 @@
-from Computer import Computer
-import tkinter as tk
-import tkinter.messagebox
 class Game:
-
 
     def __init__(self, board, player1, player2):
         self.board = board
@@ -14,6 +10,8 @@ class Game:
         self.current_player = self.player1 if self.current_player == self.player2 else self.player2
 
     def game_over(self):
+
+        # if board is full or if both players do not have valid moves then return true
 
         if self.board.is_full():
             print("board full")

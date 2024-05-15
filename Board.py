@@ -1,18 +1,23 @@
 class Board:
     def __init__(self):
+        # board used for gui
         self.board = [[' ' for _ in range(8)] for _ in range(8)]
+
+        # board used to put in the moves in letters, so it's easier to check the color present in the cell
         self.colors = [[' ' for _ in range(8)] for _ in range(8)]
+
+        # initializing the letter based board
         self.colors[3][3] = 'W'
         self.colors[3][4] = 'B'
         self.colors[4][3] = 'B'
         self.colors[4][4] = 'W'
 
-
-
     def __getitem__(self, key):
         return self.colors[key]
 
     def flip(self, row, col):
+
+        # flipping piece color in the letter based board
         if self.colors[row][col] == 'W':
             self.colors[row][col] = 'B'
         else:
@@ -27,6 +32,7 @@ class Board:
         return True
 
     def display(self):
+
         print('    0   1   2   3   4   5   6   7')
 
         print('  ---------------------------------')
