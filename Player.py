@@ -146,10 +146,8 @@ class Player:
     #     return False
 
     def has_valid_move(self, board):
-        for row in range(8):
-            for col in range(8):
-                if len(self.findValidMoves(board)) != 0:
-                    return True
+        if len(self.findValidMoves(board)) != 0:
+            return True
 
         return False
 

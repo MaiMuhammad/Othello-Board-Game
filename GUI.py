@@ -1,23 +1,23 @@
 import tkinter as tk
 import tkinter.messagebox
 
-from Computer import Computer
+from Computer import Computer  # Import the Computer class for the computer player
 import time
-
 
 class OthelloGUI:
 
-    def __init__(self, master, game,difficulty):
+    def __init__(self, master, game, difficulty):
         self.master = master
         self.master.title("Othello")
         self.game = game
-        self.create_board()
+        self.create_board()  # Create the game board GUI
         self.difficulty = difficulty
 
     def create_board(self):
+        # Configure the main window
         self.master.configure(bg='gray14')
-        self.cells = [[None for _ in range(8)] for _ in range(8)]
-        valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
+        self.cells = [[None for _ in range(8)] for _ in range(8)]  # Initialize the cells on the game board
+        valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)  # Find valid moves for the current player
 
         # Create a frame to hold the score labels
         score_frame = tk.Frame(self.master, bg='gray22')
@@ -51,6 +51,7 @@ class OthelloGUI:
                                        anchor='center', fg='white', bg='gray22')
         player2_score_label.pack(side=tk.TOP)
 
+        # Create the game board cells
         for i in range(8):
             for j in range(8):
                 cell = tk.Canvas(self.master, width=55, height=55, bg='sea green', highlightthickness=1,
@@ -61,6 +62,7 @@ class OthelloGUI:
                     cell.bind('<Button-1>', lambda e, row=i, col=j: self.handle_click(row, col))
                 self.cells[i][j] = cell
 
+        # Initialize the starting discs on the board
         self.draw_filled_circle('W', 3, 3)
         self.draw_filled_circle('B', 4, 3)
         self.draw_filled_circle('B', 3, 4)
@@ -70,12 +72,14 @@ class OthelloGUI:
         self.update_scores()
 
     def update_scores(self):
+        # Update the player scores on the GUI
         self.player1_score.set(
             f"Color: {self.game.player1.color}\nScore: {self.game.player1.count_score(self.game.board.colors)}")
         self.player2_score.set(
             f"Color: {self.game.player2.color}\nScore: {self.game.player2.count_score(self.game.board.colors)}")
 
     def handle_click(self, row, col):
+        # Handle player's move when a cell is clicked
         if self.game.board.colors[row][col] == ' ':
 
             valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
@@ -88,23 +92,29 @@ class OthelloGUI:
                     for j in range(8):
                         cell = self.cells[i][j]
                         cell.config(bg='sea green')
+                self.game.switch_player()
+                self.master.after(1000, self.computer_move)
 
-            else:
-                tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
-                if self.game.game_over():
-                    self.show_message()
 
-        self.game.switch_player()
-        self.master.after(1000, self.computer_move)
+
+        if self.game.game_over():
+            self.show_message()
+
 
     def update_board(self):
+        # Update the game board GUI after each move
         if not isinstance(self.game.current_player, Computer):
             for i in range(8):
                 for j in range(8):
                     cell = self.cells[i][j]
                     valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
-                    # if len(valid_moves)==0:
-                    #     tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                    print(valid_moves)
+                    if not self.game.current_player.has_valid_move(self.game.board):
+                        tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
+                        self.game.switch_player()
+                        self.computer_move()
+                        if self.game.game_over():
+                            self.show_message()
                     if self.game.board.colors[i][j] == ' ':
                         if (i, j) in valid_moves:
                             cell.config(bg='dark sea green')
@@ -125,23 +135,24 @@ class OthelloGUI:
             self.show_message()
 
     def computer_move(self):
+        # Perform the computer's move
         if isinstance(self.game.current_player, Computer):
             move = self.game.current_player.make_move(self.game.board.colors, self.difficulty)
+            print(move)
             if move is not None:
                 row, col = move
                 self.game.board.colors[row][col] = self.game.current_player.color
                 self.game.current_player.flip(row, col, self.game.board)
-            # else:
-            #     tk.messagebox.showinfo("oops", "No valid moves for computer\nYou're turn!")
+            else:
+                tk.messagebox.showinfo("oops", "No valid moves for Computer\nYou're turn!")
+                if self.game.game_over():
+                    self.show_message()
+
             self.game.switch_player()
             self.update_board()
 
-
-        else:
-            # Handle human player move here
-            pass
-
     def draw_filled_circle(self, color, x, y):
+        # Draw a filled circle on the canvas
         if color == "W":
             circle_color = "white"
         else:
@@ -152,6 +163,7 @@ class OthelloGUI:
         canvas.create_oval(4, 4, cell_size - 4, cell_size - 4, outline='black', width=1, fill=circle_color)
 
     def show_message(self):
+        # Display the end game message
         import sys
 
         def show_message(self):
@@ -175,5 +187,3 @@ class OthelloGUI:
             ok_button.pack(pady=8)
 
             self.master.wait_window(popup)
-
-

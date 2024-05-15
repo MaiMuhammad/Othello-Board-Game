@@ -17,7 +17,7 @@ class Game:
 
         if self.board.is_full():
             return True
-        elif not self.player1.has_valid_move(self.board) and not self.player1.has_valid_move(self.board):
+        elif not self.player1.has_valid_move(self.board) and not self.player2.has_valid_move(self.board):
             return True
 
         return False
