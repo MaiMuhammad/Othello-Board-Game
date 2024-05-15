@@ -16,8 +16,10 @@ class Game:
     def game_over(self):
 
         if self.board.is_full():
+            print("board full")
             return True
-        elif not self.player1.has_valid_move(self.board) and not self.player2.has_valid_move(self.board):
+        if not self.player1.has_valid_move(self.board) and not self.player2.has_valid_move(self.board):
+            print("no more moves")
             return True
 
         return False

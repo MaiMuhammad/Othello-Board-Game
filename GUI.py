@@ -1,8 +1,9 @@
 import tkinter as tk
 import tkinter.messagebox
-
+import sys
 from Computer import Computer  # Import the Computer class for the computer player
 import time
+
 
 class OthelloGUI:
 
@@ -17,7 +18,8 @@ class OthelloGUI:
         # Configure the main window
         self.master.configure(bg='gray14')
         self.cells = [[None for _ in range(8)] for _ in range(8)]  # Initialize the cells on the game board
-        valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)  # Find valid moves for the current player
+        valid_moves = self.game.current_player.findValidMoves(
+            self.game.board.colors)  # Find valid moves for the current player
 
         # Create a frame to hold the score labels
         score_frame = tk.Frame(self.master, bg='gray22')
@@ -96,11 +98,6 @@ class OthelloGUI:
                 self.master.after(1000, self.computer_move)
 
 
-
-        if self.game.game_over():
-            self.show_message()
-
-
     def update_board(self):
         # Update the game board GUI after each move
         if not isinstance(self.game.current_player, Computer):
@@ -110,11 +107,15 @@ class OthelloGUI:
                     valid_moves = self.game.current_player.findValidMoves(self.game.board.colors)
                     print(valid_moves)
                     if not self.game.current_player.has_valid_move(self.game.board):
+                        if self.game.game_over():
+                            print("game over")
+                            self.show_message()
+                            break
                         tk.messagebox.showinfo("oops", "No valid moves for you\nComputer's turn!")
                         self.game.switch_player()
                         self.computer_move()
-                        if self.game.game_over():
-                            self.show_message()
+                        #self.game.switch_player()
+
                     if self.game.board.colors[i][j] == ' ':
                         if (i, j) in valid_moves:
                             cell.config(bg='dark sea green')
@@ -126,12 +127,12 @@ class OthelloGUI:
                         cell.config(bg='sea green')
                         self.draw_filled_circle(self.game.board.colors[i][j], i, j)
 
-
         # Update the scores initially
         self.update_scores()
 
         # After updating the board, check if the game is over
         if self.game.game_over():
+            print("game over")
             self.show_message()
 
     def computer_move(self):
@@ -144,9 +145,11 @@ class OthelloGUI:
                 self.game.board.colors[row][col] = self.game.current_player.color
                 self.game.current_player.flip(row, col, self.game.board)
             else:
-                tk.messagebox.showinfo("oops", "No valid moves for Computer\nYou're turn!")
                 if self.game.game_over():
+                    print("game over")
                     self.show_message()
+                    pass
+                tk.messagebox.showinfo("oops", "No valid moves for Computer\nYou're turn!")
 
             self.game.switch_player()
             self.update_board()
@@ -163,27 +166,24 @@ class OthelloGUI:
         canvas.create_oval(4, 4, cell_size - 4, cell_size - 4, outline='black', width=1, fill=circle_color)
 
     def show_message(self):
-        # Display the end game message
-        import sys
+        if self.game.player2.count_score(self.game.board.colors) == self.game.player1.count_score(
+                self.game.board.colors):
+            message = 'Game over!\nDraw!'
+        else:
+            message = f"Game over! {'Black' if self.game.player1.count_score(self.game.board.colors) > self.game.player2.count_score(self.game.board.colors) else 'White'} wins!"
 
-        def show_message(self):
-            if self.game.game_over():
-                if self.game.player2.count_score(self.game.board.colors) == self.game.player1.count_score(
-                        self.game.board.colors):
-                    message = 'Game over!\nDraw!'
-                else:
-                    message = f"Game over! {'Black' if self.game.player1.count_score(self.game.board.colors) > self.game.player2.count_score(self.game.board.colors) else 'White'} wins!"
-            else:
-                message = 'Game is still in progress'
+        popup = tk.Toplevel(self.master)
+        popup.title("Message")
+        label = tk.Label(popup, text=message, font=("Helvetica", 12), padx=20, pady=10, width=20)
+        label.pack()
 
-            popup = tk.Toplevel(self.master)
-            popup.attributes('-topmost', True)
-            popup.attributes('-topmost', False)
-            popup.title("Message")
-            label = tk.Label(popup, text=message, font=("Helvetica", 12), padx=20, pady=10, width=20)
-            label.pack()
+        def close_windows():
+            popup.destroy()
+            self.master.destroy()
+            sys.exit()
 
-            ok_button = tk.Button(popup, text="OK", command=lambda: [popup.destroy(), sys.exit()], width=6, height=1)
-            ok_button.pack(pady=8)
+        ok_button = tk.Button(popup, text="OK", command=close_windows, width=6, height=1)
+        ok_button.pack(pady=8)
 
-            self.master.wait_window(popup)
+        self.master.wait_window(popup)
+

@@ -21,7 +21,7 @@ class Board:
     def is_full(self):
         for row in self.colors:
             for cell in row:
-                if cell == '':
+                if cell == ' ':
                     return False
 
         return True
